@@ -1,5 +1,4 @@
 import React from "react";
-import { SignIn } from "./src/screens/SignIn";
 import AppLoading from "expo-app-loading";
 import {
   useFonts,
@@ -10,7 +9,9 @@ import {
   Rajdhani_500Medium,
   Rajdhani_700Bold,
 } from "@expo-google-fonts/rajdhani";
-
+import { StatusBar } from "react-native";
+import { Background } from "./src/components/Background";
+import { Routes } from "./src/routes";
 export default function App() {
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -22,5 +23,14 @@ export default function App() {
   if (!fontsLoaded) {
     return <AppLoading />;
   }
-  return <SignIn />;
+  return (
+    <Background>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <Routes />
+    </Background>
+  );
 }

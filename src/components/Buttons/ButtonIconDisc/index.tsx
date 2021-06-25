@@ -1,17 +1,11 @@
 import React from "react";
 import { ReactNode } from "react";
-
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  TouchableOpacityProps,
-} from "react-native";
+import { RectButton, RectButtonProps } from "react-native-gesture-handler";
+import { View, Text, Image } from "react-native";
 import DiscordImg from "../../../assets/discord.png";
 import { styles } from "./styles";
 
-interface ButtonIconDiscProps extends TouchableOpacityProps {
+interface ButtonIconDiscProps extends RectButtonProps {
   children?: ReactNode;
   title?: string;
 }
@@ -22,11 +16,11 @@ export function ButtonIconDisc({
   ...rest
 }: ButtonIconDiscProps) {
   return (
-    <TouchableOpacity style={styles.container} {...rest}>
+    <RectButton style={styles.container} {...rest}>
       <View style={styles.contentWraper}>
         <Image source={DiscordImg} />
       </View>
       <Text style={styles.text}>{children ? children : title}</Text>
-    </TouchableOpacity>
+    </RectButton>
   );
 }
