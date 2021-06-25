@@ -41,5 +41,6 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: theme.fonts.title500,
     color: theme.colors.heading,
+    marginTop: 15,
   },
 });
