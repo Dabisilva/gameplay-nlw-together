@@ -1,68 +1,134 @@
-import React from "react";
-import { View, ImageBackground, Text, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  ImageBackground,
+  Text,
+  FlatList,
+  Share,
+  Platform,
+} from "react-native";
 import { BorderlessButton } from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+import * as Linking from "expo-linking";
+
 import BannerSvg from "../../assets/banner.png";
+import { theme } from "../../theme";
+import { AppointmentProps } from "../../@types/AppoinmentsType";
 
 import { Background } from "../../components/Background";
 import { Header } from "../../components/Header";
 import { ListHeader } from "../../components/ListHeader";
+import { Load } from "../../components/Load";
 import { ButtonIconDisc } from "../../components/Buttons/ButtonIconDisc";
-import { Member } from "../../components/Member";
-
-import { theme } from "../../theme";
+import { Member, MemberProps } from "../../components/Member";
+import { ListDivider } from "../../components/ListDivider";
 
 import { styles } from "./styles";
+import { api } from "../../services/api";
+import { Alert } from "react-native";
+
+interface MembersProps {
+  guildSelected: AppointmentProps;
+}
+
+interface WidgetsProps {
+  id: string;
+  name: string;
+  instant_invite: string;
+  members: MemberProps[];
+  presence_count: number;
+}
 
 export function AppointmentsDetails() {
-  const members = [
-    {
-      id: "1",
-      username: "Dabi",
-      avatar_url:
-        "https://instagram.fbsb8-1.fna.fbcdn.net/v/t51.2885-19/s150x150/188764723_306615447625678_3956496782483384419_n.jpg?tp=1&_nc_ht=instagram.fbsb8-1.fna.fbcdn.net&_nc_ohc=kBTqI_VUEdQAX9AxEP1&edm=ABfd0MgBAAAA&ccb=7-4&oh=9682997f6a88e35cd98e7cd55af04278&oe=60DAC27A&_nc_sid=7bff83",
-      status: "online",
-    },
-    {
-      id: "2",
-      username: "Dabi",
-      avatar_url:
-        "https://instagram.fbsb8-1.fna.fbcdn.net/v/t51.2885-19/s150x150/188764723_306615447625678_3956496782483384419_n.jpg?tp=1&_nc_ht=instagram.fbsb8-1.fna.fbcdn.net&_nc_ohc=kBTqI_VUEdQAX9AxEP1&edm=ABfd0MgBAAAA&ccb=7-4&oh=9682997f6a88e35cd98e7cd55af04278&oe=60DAC27A&_nc_sid=7bff83",
-      status: "offline",
-    },
-  ];
+  const route = useRoute();
+  const { guildSelected } = route.params as MembersProps;
+  const [widget, setWidget] = useState<WidgetsProps>({} as WidgetsProps);
+  const [loading, setLoading] = useState(true);
+
+  async function getGuildWidget() {
+    try {
+      const response = await api.get(
+        `/guilds/${guildSelected.guild.id}/widget.json`
+      );
+      setWidget(response.data);
+    } catch {
+      Alert.alert(
+        "Aleta",
+        "Verifique as configurações do servidor, veja se a opção Widget está habilitada!"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleShareInvite() {
+    const message =
+      Platform.OS === "ios"
+        ? `Junte-se a ${guildSelected.guild.name}`
+        : widget.instant_invite;
+
+    Share.share({
+      message,
+      url: widget.instant_invite,
+    });
+  }
+
+  function handleGoToServer() {
+    Linking.openURL(widget.instant_invite);
+  }
+
+  useEffect(() => {
+    getGuildWidget();
+  }, [guildSelected]);
 
   return (
     <Background>
       <Header
         title="Detelhes"
         action={
-          <BorderlessButton>
-            <Fontisto name="share" size={24} color={theme.colors.primary} />
-          </BorderlessButton>
+          guildSelected.guild.owner && (
+            <BorderlessButton onPress={handleShareInvite}>
+              <Fontisto name="share" size={24} color={theme.colors.primary} />
+            </BorderlessButton>
+          )
         }
       />
 
       <ImageBackground source={BannerSvg} style={styles.banner}>
         <View style={styles.bannerContent}>
-          <Text style={styles.title}>Lendários</Text>
-          <Text style={styles.subTitle}>
-            É hoje que vamos chegar ao challenger sem perder uma partida da md10
-          </Text>
+          <Text style={styles.title}>{guildSelected.guild.name}</Text>
+          <Text style={styles.subTitle}>{guildSelected.description}</Text>
         </View>
       </ImageBackground>
-      <ListHeader title="Jogadores" subtitle="Total 3" />
 
-      <FlatList
-        data={members}
-        keyExtractor={(item) => String(item.id)}
-        style={styles.members}
-        renderItem={({ item }) => <Member data={item} />}
-      />
+      {loading ? (
+        <Load />
+      ) : (
+        <>
+          <ListHeader
+            title="Jogadores"
+            subtitle={`Total ${widget.members.length}`}
+          />
 
-      <View style={styles.buttonContainer}>
-        <ButtonIconDisc title="Entrar na partida" />
-      </View>
+          <FlatList
+            data={widget.members}
+            keyExtractor={(item) => String(item.id)}
+            style={styles.members}
+            ItemSeparatorComponent={() => <ListDivider isCentered />}
+            renderItem={({ item }) => <Member data={item} />}
+          />
+        </>
+      )}
+
+      {widget.instant_invite && (
+        <View style={styles.buttonContainer}>
+          <ButtonIconDisc
+            onPress={handleGoToServer}
+            title="Entrar na partida"
+          />
+        </View>
+      )}
     </Background>
   );
 }

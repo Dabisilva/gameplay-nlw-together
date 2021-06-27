@@ -6,13 +6,10 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 31,
   },
   content: {
     flex: 1,
     width: "100%",
-    borderBottomColor: theme.colors.secondary40,
-    borderBottomWidth: 1,
     paddingBottom: 7,
   },
   userName: {

@@ -23,7 +23,7 @@ export function Guild({ data, ...rest }: Props) {
         style={styles.guildIconContainer}
         colors={[theme.colors.secondary50, theme.colors.secondary70]}
       >
-        <GuildIcon />
+        <GuildIcon guildId={data.id} iconId={data.icon} />
       </LinearGradient>
 
       <View style={styles.content}>
