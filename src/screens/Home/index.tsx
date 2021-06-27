@@ -8,6 +8,7 @@ import { Appointment } from "../../components/Appointment";
 import { useNavigation } from "@react-navigation/native";
 
 import { styles } from "./styles";
+import { ListDivider } from "../../components/ListDivider";
 
 export function Home() {
   const navigation = useNavigation();
@@ -66,19 +67,19 @@ export function Home() {
         setCategory={handleCategorySelect}
       />
 
-      <View style={styles.content}>
-        <ListHeader title="Partidas agendadas" subtitle="Total 6" />
+      <ListHeader title="Partidas agendadas" subtitle="Total 6" />
 
-        <FlatList
-          data={appointments}
-          keyExtractor={(item) => String(item.id)}
-          style={styles.matches}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <Appointment data={item} onPress={handleAppintmentDetails} />
-          )}
-        />
-      </View>
+      <FlatList
+        data={appointments}
+        keyExtractor={(item) => String(item.id)}
+        style={styles.matches}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 69 }}
+        ItemSeparatorComponent={() => <ListDivider />}
+        renderItem={({ item }) => (
+          <Appointment data={item} onPress={handleAppintmentDetails} />
+        )}
+      />
     </View>
   );
 }

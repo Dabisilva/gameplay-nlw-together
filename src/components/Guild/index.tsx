@@ -5,6 +5,7 @@ import {
   View,
   Text,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { GuildIcon } from "../../components/GuildIcon";
 import { styles } from "./styles";
@@ -18,7 +19,12 @@ interface Props extends TouchableOpacityProps {
 export function Guild({ data, ...rest }: Props) {
   return (
     <TouchableOpacity {...rest} activeOpacity={0.7} style={styles.container}>
-      <GuildIcon />
+      <LinearGradient
+        style={styles.guildIconContainer}
+        colors={[theme.colors.secondary50, theme.colors.secondary70]}
+      >
+        <GuildIcon />
+      </LinearGradient>
 
       <View style={styles.content}>
         <View>

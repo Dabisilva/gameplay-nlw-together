@@ -6,7 +6,14 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 31,
+  },
+  guildIconContainer: {
+    height: 68,
+    width: 64,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 20,
   },
   content: {
     flex: 1,
@@ -32,9 +39,6 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomColor: theme.colors.secondary40,
-    borderBottomWidth: 1,
-    paddingBottom: 7,
   },
   dateInfo: {
     flexDirection: "row",

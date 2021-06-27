@@ -34,6 +34,10 @@ export function AppointmentsCreate() {
     setStateModal(true);
   }
 
+  function handleCategorySelect(categoryId: string) {
+    setCategory(categoryId);
+  }
+
   function handleGuildSelected(guildSelected: GuildProps) {
     setGuild(guildSelected);
     setStateModal(false);
@@ -61,7 +65,7 @@ export function AppointmentsCreate() {
           </Text>
           <CategorySelect
             hasCheckBox
-            setCategory={setCategory}
+            setCategory={handleCategorySelect}
             categorySelected={category}
           />
 
@@ -84,7 +88,9 @@ export function AppointmentsCreate() {
             </RectButton>
             <View style={styles.field}>
               <View>
-                <Text style={styles.label}>Dia e mês</Text>
+                <Text style={[styles.label, { marginBottom: 12 }]}>
+                  Dia e mês
+                </Text>
 
                 <View style={styles.column}>
                   <SmallInput maxLength={2} />
@@ -94,7 +100,9 @@ export function AppointmentsCreate() {
               </View>
 
               <View>
-                <Text style={styles.label}>Hora e minuto</Text>
+                <Text style={[styles.label, { marginBottom: 12 }]}>
+                  Hora e minuto
+                </Text>
 
                 <View style={styles.column}>
                   <SmallInput maxLength={2} />
@@ -121,6 +129,7 @@ export function AppointmentsCreate() {
         visible={stateModal}
         onDismiss={handleCloseGuilds}
         onRequestClose={handleCloseGuilds}
+        closeModal={handleCloseGuilds}
       >
         <Guilds handleGuildSelected={handleGuildSelected} />
       </ModalView>

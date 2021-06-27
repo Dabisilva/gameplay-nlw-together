@@ -9,9 +9,12 @@ import {
   Rajdhani_500Medium,
   Rajdhani_700Bold,
 } from "@expo-google-fonts/rajdhani";
+
 import { StatusBar } from "react-native";
 import { Background } from "./src/components/Background";
+import { AuthProvider } from "./src/context/auth";
 import { Routes } from "./src/routes";
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -30,7 +33,9 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      <Routes />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </Background>
   );
 }
